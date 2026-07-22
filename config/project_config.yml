@@ -1,0 +1,117 @@
+branch_data:
+  dcm_project:
+    approvers: []
+    dcm_dir: dcm_automation
+    dcm_target: DCM_METADATA
+    is_default: true
+    is_default_target: true
+    is_default_true: true
+    require_pr: false
+    required_approvals: 0
+    sf_databases:
+    - CICD_METADATA
+    sf_roles:
+    - DBA_ADMIN
+    - DBA_FR
+    sf_schemas:
+    - DCM_CONFIG
+    sf_user: github_germania_project_user
+  dev:
+    approvers: []
+    dcm_dir: dcm_automation
+    dcm_target: GERMANIA_DCM_DEV
+    require_pr: false
+    required_approvals: 0
+    sf_databases:
+    - GERMANIA_DEVOPS_DB_DEV
+    sf_roles:
+    - DBA_ADMIN
+    - DBA_FR
+    sf_schemas: &id001
+    - CLAIMS
+    - PAYERS
+    sf_user: github_germania_dev_user
+  prod:
+    approvers:
+    - DishaRaniBR
+    - karthikr-63
+    dcm_dir: dcm_automation
+    dcm_target: GERMANIA_DCM_PROD
+    require_pr: true
+    required_approvals: 2
+    sf_databases:
+    - GERMANIA_DEVOPS_DB_PROD
+    sf_roles:
+    - DBA_ADMIN
+    - DBA_FR
+    sf_schemas: *id001
+    sf_user: github_germania_prod_user
+  qa:
+    approvers:
+    - DishaRaniBR
+    dcm_dir: dcm_automation
+    dcm_target: GERMANIA_DCM_QA
+    require_pr: false
+    required_approvals: 1
+    sf_databases:
+    - GERMANIA_DEVOPS_DB_QA
+    sf_roles:
+    - DBA_ADMIN
+    - DBA_FR
+    sf_schemas: *id001
+    sf_user: github_germania_qa_user
+  uat:
+    approvers:
+    - DishaRaniBR
+    - greatbat67
+    dcm_dir: dcm_automation
+    dcm_target: GERMANIA_DCM_UAT
+    require_pr: false
+    required_approvals: 2
+    sf_databases:
+    - GERMANIA_DEVOPS_DB_UAT
+    sf_roles:
+    - DBA_ADMIN
+    - DBA_FR
+    sf_schemas: *id001
+    sf_user: github_germania_uat_user
+branch_sequence:
+- dev
+- qa
+- uat
+- prod
+- dcm_project
+dcm_dir: dcm_automation
+dcm_project_name: dcm_automation
+escape_protection_branches: []
+github:
+  files_to_copy:
+  - requirements.txt
+  - snowflake.toml
+  folders_to_copy:
+  - Projects
+  - dcm_scripts_template
+  - initialization_template
+  repo_visibility: public
+  source_branch: dev
+  source_repository: https://github.com/GreatBat67/pepsi_cicd
+owner: Karthik-Snowflake-workspace
+project: Germania
+project_description: Snowflake Gated GitOps Core Offering
+repo_name: Germania
+roles:
+  DBA_ADMIN:
+    create: true
+    ownership: true
+    read: true
+  DBA_FR:
+    create: true
+    ownership: false
+    read: true
+setup_dcm: true
+setup_repo: true
+setup_snowflake: true
+snowflake_global:
+  account_identifier: KIPI-KIPI_PRIMARY
+  admin_role: PSEUDO_ACCOUNTADMIN
+  warehouse: github_cicd_demo_wh

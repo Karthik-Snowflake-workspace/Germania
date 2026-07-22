@@ -1,0 +1,122 @@
+snowflake_global:
+  account_identifier: "KIPI-KIPI_PRIMARY"
+  admin_role: "PSEUDO_ACCOUNTADMIN"
+  warehouse: "github_cicd_demo_wh"
+
+dbt_global:
+  dbt_dir: "./dcm_dbt_cicd"
+  project_name: "dcm_dbt_cicd"
+  profile: "dcm_dbt_cicd"
+  threads: 4
+
+branch_data:
+
+  dev:
+    require_pr: false
+    required_approvals: 0
+    approvers: []
+
+    sf_user: "github_cicd_demo_dev_user"
+    sf_roles:
+      - "DBA_ADMIN"
+      - "DBA_FR"
+
+    sf_databases:
+      - "CICD_DEMO_DEV"
+
+    sf_schemas:
+      - "UTILITIES"
+
+    dbt_target: "dev"
+    dbt_dir: "./dcm_dbt_cicd"
+    dbt_project: "dbt_project_dev"
+    dbt_profile: "default"
+    dbt_warehouse: "github_cicd_demo_wh"
+    dbt_database: "CICD_DEMO_DEV"
+    dbt_schema: "UTILITIES"
+
+    is_default_target: true
+
+  qa:
+    require_pr: true
+    required_approvals: 1
+    approvers:
+      - "GreatBat67"
+
+    sf_user: "github_cicd_demo_qa_user"
+    sf_roles:
+      - "DBA_ADMIN"
+      - "DBA_FR"
+
+    sf_databases:
+      - "CICD_DEMO_QA"
+
+    sf_schemas:
+      - "UTILITIES"
+      - "PATIENTS"
+      - "MANAGEMENT"
+
+    dbt_target: "qa"
+    dbt_dir: "./dcm_dbt_cicd"
+    dbt_project: "dbt_project_dev"
+    dbt_profile: "default"
+    dbt_warehouse: "github_cicd_demo_wh"
+    dbt_database: "CICD_DEMO_QA"
+    dbt_schema: "UTILITIES"
+
+    is_default_target: false
+
+  cicd:
+    require_pr: true
+    required_approvals: 1
+    approvers:
+      - "GreatBat67"
+
+    sf_user: "github_cicd_demo_cicd_user"
+    sf_roles:
+      - "DBA_ADMIN"
+      - "DBA_FR"
+
+    sf_databases:
+      - "CICD_DEMO_CICD"
+
+    sf_schemas:
+      - "UTILITIES"
+
+    dbt_target: "cicd"
+    dbt_dir: "./dcm_dbt_cicd"
+    dbt_project: "dbt_project_dev"
+    dbt_profile: "default"
+    dbt_warehouse: "github_cicd_demo_wh"
+    dbt_database: "CICD_DEMO_CICD"
+    dbt_schema: "UTILITIES"
+
+    is_default_target: false
+
+  main:
+    require_pr: true
+    required_approvals: 1
+    approvers:
+      - "GreatBat67"
+
+    sf_user: "github_cicd_demo_prod_user"
+    sf_roles:
+      - "DBA_ADMIN"
+      - "DBA_FR"
+
+    sf_databases:
+      - "CICD_DEMO_PROD"
+
+    sf_schemas:
+      - "UTILITIES"
+      - "PATIENTS"
+
+    dbt_target: "prod"
+    dbt_dir: "./dcm_dbt_cicd"
+    dbt_project: "dbt_project_prod"
+    dbt_profile: "default"
+    dbt_warehouse: "github_cicd_demo_wh"
+    dbt_database: "CICD_DEMO_PROD"
+    dbt_schema: "UTILITIES"
+
+    is_default_target: false

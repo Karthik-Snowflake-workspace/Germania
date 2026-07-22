@@ -1,0 +1,87 @@
+name: "Standard Tier: Automated Snowflake Delivery - Master"
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - dev
+      - qa
+      - uat
+      - prod
+    paths:
+      - 'initialization_template/**'
+      - 'dcm_automation/**'
+      - 'Projects/**'
+      - 'dcm_scripts_template/**'
+  push:
+    branches:
+      - dev
+      - qa
+      - uat
+      - prod
+    paths:
+      - 'initialization_template/**'
+      - 'dcm_automation/**'
+      - 'Projects/**'
+      - 'dcm_scripts_template/**'
+
+permissions:
+  id-token: write 
+  contents: read
+
+jobs:
+  dev-environment-plan:
+    if: github.event_name == 'pull_request' && github.base_ref == 'dev'
+    uses: ./.github/workflows/snowflake-pipeline-dev.yml
+    with:
+      action_type: 'plan'
+    secrets: inherit
+
+  dev-environment-deploy:
+    if: github.event_name == 'push' && github.ref_name == 'dev'
+    uses: ./.github/workflows/snowflake-pipeline-dev.yml
+    with:
+      action_type: 'deploy'
+    secrets: inherit
+
+  qa-environment-plan:
+    if: github.event_name == 'pull_request' && github.base_ref == 'qa'
+    uses: ./.github/workflows/snowflake-pipeline-qa.yml
+    with:
+      action_type: 'plan'
+    secrets: inherit
+
+  qa-environment-deploy:
+    if: github.event_name == 'push' && github.ref_name == 'qa'
+    uses: ./.github/workflows/snowflake-pipeline-qa.yml
+    with:
+      action_type: 'deploy'
+    secrets: inherit
+
+  uat-environment-plan:
+    if: github.event_name == 'pull_request' && github.base_ref == 'uat'
+    uses: ./.github/workflows/snowflake-pipeline-uat.yml
+    with:
+      action_type: 'plan'
+    secrets: inherit
+
+  uat-environment-deploy:
+    if: github.event_name == 'push' && github.ref_name == 'uat'
+    uses: ./.github/workflows/snowflake-pipeline-uat.yml
+    with:
+      action_type: 'deploy'
+    secrets: inherit
+
+  prod-environment-plan:
+    if: github.event_name == 'pull_request' && github.base_ref == 'prod'
+    uses: ./.github/workflows/snowflake-pipeline-prod.yml
+    with:
+      action_type: 'plan'
+    secrets: inherit
+
+  prod-environment-deploy:
+    if: github.event_name == 'push' && github.ref_name == 'prod'
+    uses: ./.github/workflows/snowflake-pipeline-prod.yml
+    with:
+      action_type: 'deploy'
+    secrets: inherit

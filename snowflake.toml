@@ -1,0 +1,5 @@
+[snowflake]
+manifest_version = "1.0"
+
+[connections.default]
+authenticator = "WORKLOAD_IDENTITY"

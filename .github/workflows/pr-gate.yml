@@ -1,0 +1,31 @@
+# Adaptive One-way PR gate enforcement workflow
+name: Enforce One-Way PR Gate
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, edited]
+    branches:
+      - qa
+      - uat
+      - prod
+
+jobs:
+  gate-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce dev -> qa gate
+        if: github.event.pull_request.base.ref == 'qa' && github.event.pull_request.head.ref != 'dev'
+        run: |
+          echo "::error::PR routing violation. Merges into target branch 'qa' must originate from source branch 'dev'."
+          exit 1
+      - name: Enforce qa -> uat gate
+        if: github.event.pull_request.base.ref == 'uat' && github.event.pull_request.head.ref != 'qa'
+        run: |
+          echo "::error::PR routing violation. Merges into target branch 'uat' must originate from source branch 'qa'."
+          exit 1
+      - name: Enforce uat -> prod gate
+        if: github.event.pull_request.base.ref == 'prod' && github.event.pull_request.head.ref != 'uat'
+        run: |
+          echo "::error::PR routing violation. Merges into target branch 'prod' must originate from source branch 'uat'."
+          exit 1
+      - name: Gate passed
+        run: echo "Branch pipeline trajectory validated successfully."

@@ -1,0 +1,34 @@
+name: 'Snowflake DCM Execution Module'
+description: 'Modular core engine managing Snowflake database infrastructure changes via DCM'
+inputs:
+  dcm_dir:
+    description: 'Path directory holding dcm configurations'
+    required: true
+  dcm_target:
+    description: 'Target profile environment label'
+    required: true
+  action_type:
+    description: 'Execution context mode (plan or deploy)'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Snowflake CLI (OIDC)
+      uses: snowflakedb/snowflake-cli-action@v2.0
+      with:
+        use-oidc: true
+    - name: Execute Targeted DCM Operations
+      shell: bash
+      run: |
+        cd ${{ inputs.dcm_dir }}
+        if [ ! -f "manifest.yml" ] || [ ! -s "manifest.yml" ]; then
+          echo "⚠️ manifest.yml not found or empty in ${{ inputs.dcm_dir }}. Skipping DCM step until orchestration runs."
+          exit 0
+        fi
+        if [ "${{ inputs.action_type }}" = "plan" ]; then
+          echo "Processing structural change mappings execution dry-run..."
+          snow dcm plan --target ${{ inputs.dcm_target }} -x
+        else
+          echo "LIVE: Pushing structural modifications directly into active database target..."
+          snow dcm deploy --target ${{ inputs.dcm_target }} -x
+        fi
